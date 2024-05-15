@@ -1,0 +1,14 @@
+Monkey
+Penguin
+Horse
+Dog
+Cat
+Bird
+Fish
+Squirrel
+Dolphin
+Restaurant
+Chicken
+Cow
+Starfish
+Crab
