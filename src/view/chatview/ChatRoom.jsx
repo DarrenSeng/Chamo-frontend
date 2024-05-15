@@ -97,7 +97,7 @@ const ChatRoom = ({getFriendStatusTowardsOtherUser, friendStatus,
 	//when currentchatsession prop is altered by this component or other components, this useeffect runs. the chat partner's username is displayed
     useEffect(() => {
         const fetchData = async () => {
-            if (currentChatSession.session && currentChatSession.session.userMap) {
+            if (currentChatSession?.session && currentChatSession?.session?.userMap) {
                 const otherUserID = Object.keys(currentChatSession.session.userMap).find(id => id !== authUser);
                 const otherUserUsername = currentChatSession.session.userMap[otherUserID];
                 setOtherUserName(otherUserUsername);
@@ -138,7 +138,7 @@ const ChatRoom = ({getFriendStatusTowardsOtherUser, friendStatus,
                     <div className='flex justify-between w-[300px]'>
                       <h1 className='text-black dark:text-white font-medium'>{otherUserName}</h1>
                     </div>
-                    {currentChatSession.session && currentChatSession.session.topicName !== null ? (
+                    {currentChatSession?.session && currentChatSession?.session?.topicName !== null ? (
                         <h1 className="text-black dark:text-white font-medium">Matching Topic: {currentChatSession.session.topicName}</h1>
                     ) : ''}
                   </div>
