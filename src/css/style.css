@@ -1,0 +1,96 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  /* By Angeline Dequit: lines 4-9 */
+  @apply transition-colors duration-200; /* this is for the transition of color, such as when toggling from dark to light mode via button */
+
+}
+
+@layer components {
+    .btn-primary {
+        @apply py-1 px-1 mx-2 border-solid border-2 border-white rounded-2xl hover: bg-gray-300 duration-300;
+    }
+    .heading {
+        @apply bg-black top-0 w-full flex justify-between px-2 py-2
+    }
+    .btn-logout {
+        @apply flex items-center mx-2
+    }
+    .search-bar-chat {
+        @apply border border-solid border-black px-5 py-2 h-auto rounded-2xl flex justify-between
+    }
+
+  /* By Angeline Dequit: lines 23-73  */
+  /* this styling for a button light/dark mode enabled see: /sign-up (create account) */
+  .btn-create {
+    @apply flex items-center justify-center w-[220px] h-[59px] 
+    text-light-grey 
+    bg-med-green dark:bg-light-green 
+    hover:bg-light-green dark:hover:bg-med-green
+    rounded-[50px] 
+    text-xl font-bold 
+    cursor-pointer
+  }
+
+
+  /* this styling for a dropdown for sorting topics */
+  .btn-dropdown {
+    @apply flex items-center justify-center w-[80px] h-[32px] 
+    text-light-grey 
+    bg-gray-200 
+    hover:bg-gray-300
+    text-base
+    rounded-sm
+    cursor-pointer
+  }
+
+  /* this styling for a label above an input field light/dark mode enabled see: /sign-up */
+  .label-input {
+    @apply flex items-center text-xl pb-2.5 rounded-xl text-gray-700 dark:text-[#fff]
+  }
+
+  /* this styling for an input field see: /sign-up */
+  .input-field {
+    @apply flex items-center m-auto w-[310px] h-[50px] bg-[#eaeaea] rounded-md p-[14px] focus:outline-none
+  }
+
+  /* this styling for h2 for an information page. light/dark mode enabled see: /privacy#overview */
+  .h2 {
+    @apply text-5xl font-semibold antialiased text-gray-700 dark:text-white
+  }
+
+  /* this styling for h3 for an information page. light/dark mode enabled see: /privacy#collect---info-shared */
+  .h3 {
+    @apply text-4xl font-semibold antialiased text-gray-700 dark:text-white
+  }
+
+  /* this styling for subtitle for an information page. light/dark mode enabled see: /privacy#overview */
+  .subtitle {
+    @apply text-xl font-medium antialiased text-gray-500 dark:text-gray-400
+  }
+
+  /* this styling for body text for an information page. light/dark mode enabled see: /privacy#use */
+  .p {
+    @apply text-gray-600 dark:text-gray-300 text-lg tracking-wide antialiased
+  }
+
+  /* this styling for a navigation link to an h1 for an information page. light/dark mode enabled see: /privacy */
+  .nav-toc-h1 {
+    @apply pl-3 hover:bg-gray-200 dark:hover:bg-dark-grey rounded-lg bg-opacity-50 from-current
+  }
+
+  /* this styling for a navigation link to an h2 for an information page. light/dark mode enabled see: /privacy */
+  .nav-toc-h2 {
+    @apply pl-7 hover:bg-gray-200 dark:hover:bg-dark-grey rounded-lg bg-opacity-50 from-current
+  }
+
+  
+
+}
+
+
+::-webkit-scrollbar {
+    display: none;
+}
