@@ -1,8 +1,8 @@
 import React from 'react';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import {Helmet} from 'react-helmet'
 import "./css/style.css"
-import { BrowserRouter as Router, Route, Routes, useParams } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { Login } from './view/Login';
 import ProtectedRoutes from './ProtectedRoutes';
 import Axios from 'axios'

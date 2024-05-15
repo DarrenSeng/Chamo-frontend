@@ -1,8 +1,7 @@
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import { FiArrowLeft } from 'react-icons/fi'; 
-import { AuthContext} from '../context/AuthProvider';
-import { useParams, useNavigate } from 'react-router-dom'
-import { loginUser,sendPasswordResetLink, testFunction } from '../api/api';
+import { useNavigate } from 'react-router-dom'
+import { loginUser,sendPasswordResetLink } from '../api/api';
 import cookies from "js-cookie";
 
 import loginBg from '../assets/login-bg.png'

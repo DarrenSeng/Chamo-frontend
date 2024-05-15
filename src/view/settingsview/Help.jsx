@@ -1,10 +1,8 @@
 import { useEffect } from 'react';
 import React, { useContext, useState } from 'react';
-import { AuthContext } from '../../context/AuthProvider';
 import { getUserDetails,submitReportRequest } from '../../api/api';
 import cookies from 'js-cookie'
 
-const colors = ['#526275', '#6B0842', '#A61F21', '#B8671F', '#D5DB8C', '#61B38F', '#2D924A', '#126FA2', '#56028F', "#ffffff"];
 
 
 const Help = () => {
@@ -35,7 +33,7 @@ const Help = () => {
   const submitRequest = async () => {
     if (!(/^\s*$/.test(textAreaValue))) {
       try {
-        const response = await submitReportRequest(userDetails.username, userDetails._id, textAreaValue);
+        await submitReportRequest(userDetails.username, userDetails._id, textAreaValue);
         setStatus('Request sent successfully!');
       } catch (error) {
         console.error("Error sending request:", error);
