@@ -5,10 +5,12 @@ import './TopicItem.css';
 import { useNavigate } from 'react-router-dom';
 import io from "socket.io-client";
 import { AuthContext } from '../context/AuthProvider';
+import cookies from 'js-cookie'
 
+const api_url = 'https://chamo-app.adaptable.app/' 
 
 const TopicItem = ({ name, image, description }) => {
-    const {authUser, setAuthUser} = useContext(AuthContext);
+    const [ authUser, setAuthUser ] = useState(cookies.get('user'));
     const [showInfo, setShowInfo] = useState(false);
     const [onPopup, setOnPopup] = useState(false);
     const [initialRoomID, setInitialRoomID] = useState("");
@@ -22,7 +24,7 @@ const TopicItem = ({ name, image, description }) => {
     const imageUrl = URL.createObjectURL(blob);
 
     const connectSocket = async () => {
-        const newSocket = io.connect("http://localhost:3001");
+        const newSocket = io.connect(api_url);
         setSocket(newSocket);
     };
 

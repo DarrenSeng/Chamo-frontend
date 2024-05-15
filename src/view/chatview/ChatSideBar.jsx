@@ -7,7 +7,7 @@ import { CiSearch } from "react-icons/ci";
 import { ImFolderDownload } from "react-icons/im";
 import axios from "axios";
 
-const socket = io.connect("http://localhost:3001")
+const socket = io.connect("https://chamo-app.adaptable.app/")
 
 
 const ChatSideBar =({getFriendStatusTowardsOtherUser, 

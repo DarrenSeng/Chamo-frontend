@@ -1,7 +1,7 @@
 import React, { useState } from 'react'; 
 import { Toaster, toast } from 'sonner';
 import axios from 'axios' 
-
+import { registerUser } from '../api/api';
 
 
 export const Registration = () => {
@@ -12,34 +12,16 @@ export const Registration = () => {
   const [password, setPassword] = useState()
   const [darkMode, setDarkMode] = useState(false); 
 
-  const register = (e) => {
-    e.preventDefault()
-    axios.post('http://localhost:3001/api/users', 
-        {
-            "firstName":firstName, 
-            "lastName":lastName, 
-            "email":email, 
-            "username":username, 
-            "password":password
-        })
-        .then( 
-            result => {
-                toast.success('User registered successfully!')
-                e.target.reset(); 
-            },
-            
-        )
-        .catch(
-            err => {
-                console.log(err)
-                if (err.response && err.response.status === 409) {
-                    toast.error('Email already in use. Please use a different email address.');
-                } else {
-                    toast.error('Error: Could not register user. Please try again.')
-                }
-            }
-        ) 
+   const register = async (e) => {
+    e.preventDefault();
+    try {
+      const userData = { firstName, lastName, username, email, password };
+      await registerUser(userData);
+      toast.success('User registered successfully!');
+    } catch (error) {
+      toast.error(error.message);
     }
+  };
 
     const toggleDarkMode = () => { 
         setDarkMode(!darkMode);

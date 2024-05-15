@@ -2,6 +2,8 @@ import React, { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthProvider';
 import { IoPersonCircle } from 'react-icons/io5';
+import { getUserDetails, updateUserProfile, getCountries } from '../api/api';
+import cookies from 'js-cookie'
 
 const colors = ['#526275', '#6B0842', '#A61F21', '#B8671F', '#D5DB8C', '#61B38F', '#2D924A', '#126FA2', '#56028F', "#ffffff"];
 const personalityTypes = [
@@ -12,7 +14,7 @@ const personalityTypes = [
 ];
 
 function ProfileMenu() {
-  const {authUser, setAuthUser} = useContext(AuthContext);
+  const [ authUser, setAuthUser ] = useState(cookies.get('user'));
   const [userDetails, setUserDetails] = useState(null);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -33,8 +35,7 @@ function ProfileMenu() {
   useEffect(() => {
     const fetchUserDetails = async () => {
       try {
-        const response = await axios.get(`http://localhost:3001/api/users/${authUser}`);
-        console.log(response.data); // Add this line
+        const response = await getUserDetails(authUser)
         setUserDetails(response.data);
         setUsername(response.data.username);
         setLastName(response.data.lastName);
@@ -59,7 +60,7 @@ function ProfileMenu() {
   useEffect(() => {
     const fetchCountries = async () => {
       try {
-        const response = await axios.get('https://restcountries.com/v3.1/all');
+        const response = await getCountries();
         setCountries(response.data);
       } catch (error) {
         console.error("Error fetching countries:", error);
@@ -104,7 +105,7 @@ function ProfileMenu() {
           topics: updatedTopics,
         };
 
-        const response = await axios.put(`http://localhost:3001/api/users/${authUser}/profile`, profileData);
+        const response = await updateUserProfile(authUser, profileData);
         console.log('Response:', response.data);
       } catch (error) {
         console.error("Error saving changes:", error);
@@ -130,7 +131,7 @@ function ProfileMenu() {
         topics: updatedTopics,
       };
 
-      const response = await axios.put(`http://localhost:3001/api/users/${authUser}/profile`, profileData);
+      const response = await updateUserProfile(authUser, profileData);
       console.log('Response:', response.data);
     } catch (error) {
       console.error("Error saving changes:", error);
@@ -182,10 +183,7 @@ function ProfileMenu() {
         iconColor: currentColor
       };
 
-      const requestUrl = `http://localhost:3001/api/users/${authUser}/profile`;
-      console.log('Request URL:', requestUrl);
-
-      const response = await axios.put(requestUrl, profileData);
+      const response = await updateUserProfile(authUser, profileData);
       setDisplayName(`${firstName} ${lastName}`); 
       alert("Changes saved successfully!");
     } catch (error) {

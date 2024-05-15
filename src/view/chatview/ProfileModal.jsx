@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext, useRef } from 'react';
 import axios from "axios";
 import { IoPersonCircle } from 'react-icons/io5';
-
+import { getUserDetails } from '../../api/api';
 
 
 const ProfileModal = ({ onClose, otherUserName, showProfileModal, userDetails, otherUserID }) => {
@@ -18,7 +18,7 @@ const ProfileModal = ({ onClose, otherUserName, showProfileModal, userDetails, o
   useEffect(() => {
     const fetchOtherUserDetails = async () => {
       try {
-          const response = await axios.get(`http://localhost:3001/api/users/${otherUserID}`);
+          const response = await getUserDetails(otherUserID);
           setFirstName(response.data.firstName)
           setLastName(response.data.lastName)
           setRealUsername(response.data.username)

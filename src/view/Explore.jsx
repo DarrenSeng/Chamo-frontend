@@ -4,28 +4,17 @@ import 'reactjs-popup/dist/index.css';
 import NavBar from '../components/NavBar'
 import { useContext, useState } from 'react';
 import { AuthContext } from '../context/AuthProvider';
-import axios from 'axios';
-import loginBg from "../assets/login-bg.png";
-import topicAnime from "../assets/topic-anime.png";
-import topicComic from "../assets/topic-comic.png";
-import topicGame from "../assets/topic-game.png";
-import topicMusic from "../assets/topic-music.png";
-import topicArt from "../assets/topic-art.jpg";
-import topicCoding from "../assets/topic-coding.jpg";
-import topicCooking from "../assets/topic-cooking.jpg";
-import topicPhotography from "../assets/topic-photo.jpg";
-import topicMovies from "../assets/topic-movies.jpg";
-import topicSports from "../assets/topic-sports.jpg";
-import topicTabletop from "../assets/topic-tabletop.jpg";
-import topicAnimal from "../assets/login-bg.png";
 import TopicContainer from '../components/TopicContainer';
 import SearchBar from '../components/SearchBar';
 import Sort from '../components/Sort';
 import { FaArrowUp, FaArrowDown } from 'react-icons/fa';
 import { IoCloseCircleOutline } from "react-icons/io5";
+import { getUserDetails,fetchAllTopics, createNewTopic } from '../api/api';
+import cookies from 'js-cookie'
 
 function Explore() {
-  const { authUser, setAuthUser } = useContext(AuthContext);
+  const [ authUser, setAuthUser ] = useState(cookies.get('user'));
+  console.log("authuser",authUser)
   const [userDetails, setUserDetails] = useState(null);
   const [firstName, setFirstName] = useState("");
   const [username, setUsername] = useState("");
@@ -41,16 +30,16 @@ function Explore() {
   useEffect(() => {
     const fetchUserDetails = async () => {
       try {
-        const response = await axios.get(`http://localhost:3001/api/users/${authUser}`);
+        
+        const response = await getUserDetails(authUser)
         setAuthUser(response.data._id)
         setUserDetails(response.data);
         setUsername(response.data.username)
         setFirstName(response.data.firstName)
         const fetchTopics = async () => {
           try {
-            const response = await axios.get('http://localhost:3001/api/topic/render_topics');
-            setTopics(response.data);
-            console.log(response.data);
+            const response = await fetchAllTopics()
+            setTopics(response);
           } catch (error) {
             console.error('Error fetching topics:', error);
           }
@@ -127,26 +116,11 @@ function Explore() {
 
   const CreateTopic = async () => {
     try {
-      const formData = new FormData();
-      formData.append('topicCreator', authUser);
-      formData.append('topicTitle', topicTitle);
-      formData.append('topicDescription', topicDescription);
-      formData.append('subscriber', []);
-
-      if (selectedImage) {
-        formData.append('topicImage', selectedImage);
-      }
-
-      const response = await axios.post('http://localhost:3001/api/topic/create_topic', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });
-
-      console.log(response.data.message);
-    } catch (error) {
+      const message = await createNewTopic(authUser, topicTitle, topicDescription, selectedImage);
+      console.log(message);
+  } catch (error) {
       console.error('Error creating topic:', error);
-    }
+  }
   }
 
   const handleImageChange = (event) => {

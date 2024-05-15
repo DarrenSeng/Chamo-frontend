@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import cookies from 'js-cookie'
 
 function editProfile(props){
     const user = useSelector(state => state.user)
@@ -12,7 +13,7 @@ function editProfile(props){
     
 }
 export function EditProfileForm() {
-    const {bio, setBio} = useContext(AuthContext)
+    const [ authUser, setAuthUser ] = useState(cookies.get('user'));
 }
 
 export default EditProfileForm;

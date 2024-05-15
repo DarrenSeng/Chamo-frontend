@@ -2,11 +2,13 @@ import { useContext, useState } from 'react';
 import { FiArrowLeft } from 'react-icons/fi'; 
 import { AuthContext} from '../context/AuthProvider';
 import { useParams, useNavigate } from 'react-router-dom'
+import { loginUser,sendPasswordResetLink, testFunction } from '../api/api';
+import cookies from "js-cookie";
 
 import loginBg from '../assets/login-bg.png'
 
 export function LoginForm() {
-    const {authUser, setAuthUser} = useContext(AuthContext)
+  const [ authUser, setAuthUser ] = useState(cookies.get('user'));
     const [email,setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [forgotPasswordMode, setForgotPasswordMode] = useState(false);  
@@ -20,34 +22,25 @@ export function LoginForm() {
                 return; 
             }
             try {
-                const response = await fetch('http://localhost:3001/api/auth', {
-                    method: 'POST',
-                    credentials: 'include',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({email,password})
-                });
-                if (response.ok) {
-                    const data = await response.json()
+                const response = await loginUser(email, password);
+                console.log("res",response.data)
+                if (response != null) {
+                    cookies.set("user",response.data.userID, {expires:7})
+                    const data = response.data
                     const isLoggedIn = data.isLoggedIn
                     if (isLoggedIn) {
-                        setAuthUser(data)
-                        navigate(`/chat`, {replace: true})
+                        setAuthUser(data.userID)
+                        navigate("/explore")
                     }
-                navigate("/explore")
-                } else {
-                    setErrorMessage("Login Failed");
-                }
+                    } else {
+                        setErrorMessage("Login Failed");
+                    }
+                    console.log("after nav")
             } catch (error) {
             }
         } else { //button changes its fetch call depending on if we're in forgetpasswordmode or not
             try {
-                const response = await fetch('http://localhost:3001/api/password-reset', {
-                    method: 'POST',
-                    headers: {'Content-Type':'application/json'},
-                    body: JSON.stringify({email})
-                });
+                const response = await sendPasswordResetLink(email);
                 if (response.ok) {
                     alert("Password Rest Link Sent")
                 } else {

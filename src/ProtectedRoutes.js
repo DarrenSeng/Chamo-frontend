@@ -4,7 +4,9 @@ import cookies from 'js-cookie'
 
 const ProtectedRoutes = () => {
     const location = useLocation()
-    const session = cookies.get('browsingSession')
+    //const session = cookies.get('browsingSession')
+    const session = cookies.get("user")
+    console.log("protected routes",session)
 
     return(
         <>

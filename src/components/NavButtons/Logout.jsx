@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 import {useNavigate} from 'react-router-dom'
 import RoundedBTN from '../../common/RoundedBTN'
 import { FaSignOutAlt } from 'react-icons/fa';
-
+import cookie from "js-cookie";
 
 function Logout() {
     const [isDropdownOpen, setDropdownOpen] = useState(false);
@@ -13,11 +13,12 @@ function Logout() {
     }
     const logoutUser = async () => {
         try {
-            const response = await fetch('http://localhost:3001/api/auth/logout', {
+            const response = await fetch('https://chamo-app.adaptable.app/api/auth/logout', {
                 method: 'POST',
                 credentials:'include',
             });
-            if (response.ok) {
+            if (response) {
+                //cookie.remove('user')
                 console.log("logged out")
                 navigate("/login")
             } else {

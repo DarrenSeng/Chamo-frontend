@@ -3,6 +3,7 @@ import loginBg from '../assets/login-bg.png'
 import { useParams, Link,useNavigate } from 'react-router-dom';
 import { createBrowserHistory } from 'history';
 import Axios from 'axios'
+import { verifyPasswordResetLink,resetPassword } from '../api/api';
 
 export function PasswordReset() {
     const navigate = useNavigate();
@@ -11,7 +12,7 @@ export function PasswordReset() {
     const [confirmPassword, setConfirmPassword] = useState("");
     async function verifyPasswordResetLink() {
             try {
-                const response = await Axios.get(`http://localhost:3001/api/password-reset/${userId}/${token}`);
+                await verifyPasswordResetLink(userId, token);
             } catch (error) {
                 navigate("/login"); 
             }
@@ -25,9 +26,9 @@ export function PasswordReset() {
             return;
         }
         try {
-            // Make a POST request to reset the password
-            await Axios.post(`http://localhost:3001/api/password-reset/${userId}/${token}`, { password });
+            await resetPassword(userId, token, password);
             alert("Password reset successfully");
+            navigate("/login")
         } catch (error) {
             console.error("Error resetting password:", error);
         }

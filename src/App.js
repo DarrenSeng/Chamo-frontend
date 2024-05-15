@@ -6,7 +6,7 @@ import { BrowserRouter as Router, Route, Routes, useParams } from 'react-router-
 import { Login } from './view/Login';
 import ProtectedRoutes from './ProtectedRoutes';
 import Axios from 'axios'
-import { AuthContext } from './context/AuthProvider';
+import { AuthContext } from './context/AuthProvider.js';
 import UserPersistance from './common/UserPersistance';
 import ProfileMenu from './common/ProfileMenu';
 import { PasswordReset } from './common/PasswordReset';
@@ -15,9 +15,10 @@ import { PrivacyPolicy } from './common/PrivacyPolicy.jsx';
 import Settings from './view/settingsview/Settings.jsx';
 import Explore from './view/Explore.jsx';
 import RenderChat from './view/chatview/RenderChat.js';
+import cookies from 'js-cookie'
 
 function App() {
-  const [authUser, setAuthUser] = useState("")
+  const [ authUser, setAuthUser ] = useState(cookies.get('user'));
   Axios.defaults.withCredentials = true
 
 

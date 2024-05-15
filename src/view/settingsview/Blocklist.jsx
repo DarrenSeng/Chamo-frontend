@@ -3,18 +3,20 @@ import { useState, useContext, useEffect } from 'react';
 import { IoPerson } from "react-icons/io5";
 import axios from 'axios';
 import { AuthContext } from '../../context/AuthProvider';
+import { getUserDetails } from '../../api/api';
+import cookies from 'js-cookie'
 
 const Blocklist = () => {
     const blockedUsers = ['User1', 'User2', 'User3', 'User4', 'User5', 'User6',]; // Replace with your actual blocked user list
 
-    const { authUser, setAuthUser } = useContext(AuthContext)
+    const [ authUser, setAuthUser ] = useState(cookies.get('user'));
     const [user, setUserDetails] = useState(null);
     const [blockedList, setBlockedList] = useState([])
 
     useEffect(() => {
         const fetchUserDetails = async () => {
             try {
-                const response = await axios.get(`http://localhost:3001/api/users/${authUser}`);
+                const response = await getUserDetails(authUser)
                 setUserDetails(response.data);
                 setBlockedList(response.data.blockedList || [])
             } catch (error) {

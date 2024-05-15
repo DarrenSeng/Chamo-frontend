@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { IoPerson } from "react-icons/io5";
+import { AuthContext } from '../../context/AuthProvider';
 import axios from 'axios';
 import io from "socket.io-client"
+import { getUserDetails, fetchUserNotifications, addNewUser } from '../../api/api';
+
 
 function NotificationsButton({ user }) {
   const [notifications, setNotifications] = useState([]);
 
   // Get notifications when a page is loaded
   useEffect(() => {
-    const socket = io.connect("http://localhost:3001")
+    const socket = io.connect("https://chamo-app.adaptable.app/")
     socket.emit('join-noti-room')
 
     socket.on('new-notification', (notification) => {
@@ -17,10 +20,8 @@ function NotificationsButton({ user }) {
 
     const fetchNotifications = async () => {
       try {
-        const response = await axios.post('http://localhost:3001/api/notifications/get_notifications', {
-          userID: user
-        });
-        setNotifications(response.data.requestList);
+        const notifications = await fetchUserNotifications(user);
+        setNotifications(notifications);
       } catch (error) {
         console.error('Error fetching notifications:', error);
       }
@@ -35,12 +36,11 @@ function NotificationsButton({ user }) {
   }, [user]); 
 
   const addUser = async (otherUserID) => {
-    await axios.post(`http://localhost:3001/api/users/add_user/${otherUserID}`, {
-        currentUserID: user
-    }).then(() => {
-    }).catch((error) => {
-        console.log(error)
-    })
+    try {
+      await addNewUser(otherUserID, user);
+  } catch (error) {
+      console.error('Error adding new user:', error);
+  }
 }
 
   const UserContainer = () => {

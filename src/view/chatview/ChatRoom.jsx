@@ -11,7 +11,7 @@ import { FaCamera, FaFile } from "react-icons/fa";
 import EmojiPicker from "emoji-picker-react";
 import ChatButtons from "./ChatButtons";
 
-const socket = io.connect("http://localhost:3001")
+const socket = io.connect("https://chamo-app.adaptable.app/")
 
 
 //This component will be a children in parent component "Chat"

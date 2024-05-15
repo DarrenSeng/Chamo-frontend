@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { IoPerson } from 'react-icons/io5';
 import axios from 'axios';
+import { getUserDetails } from '../../api/api';
 
 const ChatbarUser = ({ userID, username, recentMsg, timeAndDate, onClick }) => {
   const [dateComponents, setDateComponents] = useState({});
@@ -30,7 +31,7 @@ const ChatbarUser = ({ userID, username, recentMsg, timeAndDate, onClick }) => {
   useEffect(() => {
     const fetchUserProfileColor = async () => {
       try {
-        const response = await axios.get(`http://localhost:3001/api/users/${userID}`);
+        const response = await getUserDetails(userID)
         setIconColor(response.data.iconColor);
       } catch (error) {
         console.error('Error fetching user profile color:', error);

@@ -9,39 +9,43 @@ import 'reactjs-popup/dist/index.css';
 import ChatRoom from "./ChatRoom";
 import ChatSideBar from "./ChatSideBar";
 import ProfileModal from "./ProfileModal";
+import { getUserDetails,getChatSession, getFriendStatus, getBlockStatus,loadingMessages } from "../../api/api";
+import cookies from 'js-cookie'
 
-const socket = io.connect("http://localhost:3001")
+const socket = io.connect("https://chamo-app.adaptable.app/")
 
 let barSearchValue = ''
 
 
 
 const Chat = ({ user,passedRoomID, topicName }) => {
-    const { authUser, setAuth } = useContext(AuthContext)
+    const [ authUser, setAuthUser ] = useState(cookies.get('user'));
+    console.log("authuser",authUser)
     const [chatSessionArray, setChatSessionArray] = useState([])
     const [currentChatSession,setCurrentChatSession] = useState([])
     const [msgList, setMsgList] = useState([])
     const [userDetails, setUserDetails] = useState(user)
-    const initialRoomID = passedRoomID || userDetails.roomList[0].roomID;
+    const initialRoomID = passedRoomID || userDetails.roomList[0]?.roomID;
     const [currentRoomID, setCurrentRoomID] = useState(initialRoomID)
     const room = userDetails.roomList.find(room => room.roomID === initialRoomID);
-    const [otherUserID, setOtherUserID] = useState(room.userID)
+    const [otherUserID, setOtherUserID] = useState(room?.userID)
     const [message, setMessage] = useState('')
     const [recentMsg, setRecentMsg] = useState('')
     const navigate = useNavigate();
     const [showProfileModal,setShowProfileModal] = useState(false)
     const [iconColor, setIconColor] = useState("black")
 
+
     //if this function is triggered from a renderchat from chatsidebar component, it will set currentchatsession to that selected room
     //if this function does not have a selectedID prop because the user just navigates to chat page by default, it selects first chatsession in array
     const getUserChatSessions = async (selectedRoomID = null) => {
         try {
-            const trueUserDetails = await axios.get(`http://localhost:3001/api/users/${authUser}`)
+            const trueUserDetails = await getUserDetails(authUser)
             setUserDetails(trueUserDetails.data)
             const promises = trueUserDetails.data.roomList.map(async (room) => {
                 try {
-                    const response = await axios.get(`http://localhost:3001/api/msg/get-chatsession/${room.roomID}`);
-                    return response.data;
+                    const chatSession = await getChatSession(room.roomID);
+                    return chatSession;
                 } catch (error) {
                     return null; 
                 }
@@ -65,7 +69,7 @@ const Chat = ({ user,passedRoomID, topicName }) => {
         if (passedOtherID == null ) {
             passedOtherID = otherUserID
         }
-        const response = await axios.get(`http://localhost:3001/api/reveal/check_frq_status/${passedOtherID}/${authUser}`)
+        const response = await getFriendStatus(passedOtherID, authUser)
         if (response.data.status == 'add') {
             return "Add Friend"
         } else if (response.data.status == 'remove') {
@@ -81,7 +85,7 @@ const Chat = ({ user,passedRoomID, topicName }) => {
     }
 
     const getBlockStatusTowardsOtherUser = async () => {
-        const response = await axios.get(`http://localhost:3001/api/users/check_block_status/${otherUserID}/${authUser}`)
+        const response = await getBlockStatus(otherUserID, authUser);
         if (response.data.isBlocked == true) {
             console.log("you blocked them", response.data.isBlocked)
             setBlockStatus(true)
@@ -93,7 +97,7 @@ const Chat = ({ user,passedRoomID, topicName }) => {
     }
 
     const getBlockStatusOtherUserTowardsYou = async () => {
-        const response = await axios.get(`http://localhost:3001/api/users/check_block_status/${authUser}/${otherUserID}`)
+        const response = await getBlockStatus(authUser, otherUserID); 
         if (response.data.isBlocked == true) {
             return true
         } else {
@@ -125,7 +129,7 @@ const Chat = ({ user,passedRoomID, topicName }) => {
     useEffect(() => {
         const fetchIconColor = async () => {
             try {
-                const response = await axios.get(`http://localhost:3001/api/users/${otherUserID}`);
+                const response = await getUserDetails(otherUserID)
                 const iconColor = response.data.iconColor || ""; 
                 setIconColor(iconColor);
             } catch (error) {
@@ -155,8 +159,9 @@ const Chat = ({ user,passedRoomID, topicName }) => {
     useEffect(() => {
         const fetchUserDetails = async () => {
             try {
-                const response = await axios.get(`http://localhost:3001/api/users/${authUser}`);
+                const response = await getUserDetails(authUser)
                 setUserDetails(response.data);
+                console.log("chat page fetch")
             } catch (error) {
                 console.error('Error fetching user details:', error);
             }
@@ -226,9 +231,7 @@ const Chat = ({ user,passedRoomID, topicName }) => {
             if (topicName) {
                 requestData.topicName = topicName;
             }
-            const response 
-                = await axios.post('http://localhost:3001/api/msg/loading-messages', requestData)
-            const responseMsg = response.data
+            const responseMsg = await loadingMessages(requestData);
             responseMsg.forEach((elem, index) => {
                 const msgData = {
                     username: elem.username,

@@ -1,12 +1,14 @@
 import { useEffect } from 'react';
 import React, { useContext, useState } from 'react';
 import { AuthContext } from '../../context/AuthProvider';
-import axios from 'axios';
+import { getUserDetails,submitReportRequest } from '../../api/api';
+import cookies from 'js-cookie'
+
 const colors = ['#526275', '#6B0842', '#A61F21', '#B8671F', '#D5DB8C', '#61B38F', '#2D924A', '#126FA2', '#56028F', "#ffffff"];
 
 
 const Help = () => {
-  const { authUser, setAuthUser } = useContext(AuthContext);
+  const [ authUser, setAuthUser ] = useState(cookies.get('user'));
   const [userDetails, setUserDetails] = useState()
   const [textAreaValue, setTextAreaValue] = useState('')
   const [status, setStatus] = useState('')
@@ -14,7 +16,7 @@ const Help = () => {
   useEffect(() => {
     const fetchUserDetails = async () => {
       try {
-        const response = await axios.get(`http://localhost:3001/api/users/${authUser}`);
+        const response = await getUserDetails(authUser)
         setUserDetails(response.data);
       } catch (error) {
         console.error("Error fetching user details:", error);
@@ -33,11 +35,7 @@ const Help = () => {
   const submitRequest = async () => {
     if (!(/^\s*$/.test(textAreaValue))) {
       try {
-        const response = await axios.post('http://localhost:3001/api/help', {
-          username: userDetails.username,
-          userID: userDetails._id,
-          request: textAreaValue,
-        });
+        const response = await submitReportRequest(userDetails.username, userDetails._id, textAreaValue);
         setStatus('Request sent successfully!');
       } catch (error) {
         console.error("Error sending request:", error);

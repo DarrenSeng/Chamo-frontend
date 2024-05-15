@@ -4,10 +4,13 @@ import "../../css/style.css"
 import { AuthContext } from '../../context/AuthProvider';
 import { useParams } from 'react-router-dom';
 import axios from "axios";
+import { getUserDetails } from '../../api/api';
 import Chat from './Chat';
+import cookies from 'js-cookie'
 
 const RenderChat = () => {
-        const { authUser, setAuthUser } = useContext(AuthContext)
+    const [ authUser, setAuthUser ] = useState(cookies.get('user'));
+        console.log("authuser",authUser)
         const [user, setUserDetails] = useState(null);
         const [firstName, setFirstName] = useState("");
         const [username, setUsername] = useState("");
@@ -19,7 +22,7 @@ const RenderChat = () => {
         useEffect(() => {
             const fetchUserDetails = async() => {
                 try {
-                    const response = await axios.get(`http://localhost:3001/api/users/${authUser}`);
+                    const response = await getUserDetails(authUser);
                     setAuthUser(response.data._id)
                     setUserDetails(response.data);
                     setUsername(response.data.username)
@@ -34,20 +37,7 @@ const RenderChat = () => {
         }, [authUser])
 
 
-        const handleAddFriendsInputChange = (event) => {
-            setFriendUsername(event.target.value)
-        }
 
-        const addFriendEvent = async() => {
-            try {
-                const response = await axios.post(`http://localhost:3001/api/users/add_user/${friendUsername}`, {
-                    userID: user._id
-                })
-                console.log(response)
-            } catch (error) {
-                console.log(error)
-            }
-        }
 
         return ( <
             div className = "flex flex-col h-screen" > {

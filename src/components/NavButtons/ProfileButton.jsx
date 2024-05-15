@@ -4,6 +4,8 @@ import { IoPersonCircle } from 'react-icons/io5';
 import { useContext, useState } from 'react';
 import { AuthContext } from '../../context/AuthProvider';
 import axios from 'axios';
+import { getUserDetails } from '../../api/api';
+import cookies from 'js-cookie'
 
 const personalityTypes = [
   "ISTJ", "ISFJ", "INFJ", "INTJ",
@@ -13,7 +15,7 @@ const personalityTypes = [
 ];
 
 function ProfileButton() {
-  const { authUser } = useContext(AuthContext);
+  const [ authUser, setAuthUser ] = useState(cookies.get('user'));
   const [userDetails, setUserDetails] = useState(null);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -28,7 +30,7 @@ function ProfileButton() {
   useEffect(() => {
     const fetchUserDetails = async () => {
       try {
-        const response = await axios.get(`http://localhost:3001/api/users/${authUser}`);
+        const response = await getUserDetails(authUser)
         setUserDetails(response.data);
         setUsername(response.data.username);
         setLastName(response.data.lastName);

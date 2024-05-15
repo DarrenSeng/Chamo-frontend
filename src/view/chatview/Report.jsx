@@ -2,9 +2,11 @@ import { useEffect } from 'react';
 import React, { useContext, useState } from 'react';
 import { AuthContext } from '../../context/AuthProvider';
 import axios from 'axios';
+import { getUserDetails,submitReportRequest } from '../../api/api';
+import cookies from 'js-cookie'
 
 const Report = ({ onClose }) => {
-  const { authUser, setAuthUser } = useContext(AuthContext);
+  const [ authUser, setAuthUser ] = useState(cookies.get('user'));
   const [userDetails, setUserDetails] = useState();
   const [textAreaValue, setTextAreaValue] = useState('');
   const [status, setStatus] = useState('');
@@ -12,7 +14,7 @@ const Report = ({ onClose }) => {
   useEffect(() => {
     const fetchUserDetails = async () => {
       try {
-        const response = await axios.get(`http://localhost:3001/api/users/${authUser}`);
+        const response = await getUserDetails(authUser);
         setUserDetails(response.data);
       } catch (error) {
         console.error("Error fetching user details:", error);
@@ -30,11 +32,7 @@ const Report = ({ onClose }) => {
   const submitRequest = async () => {
     if (!(/^\s*$/.test(textAreaValue))) {
       try {
-        const response = await axios.post('http://localhost:3001/api/help', {
-          username: userDetails.username,
-          userID: userDetails._id,
-          request: textAreaValue,
-        });
+        const response = await submitReportRequest(userDetails.username, userDetails._id, textAreaValue);
         setStatus('Report form sent successfully!');
       } catch (error) {
         console.error("Error sending request:", error);

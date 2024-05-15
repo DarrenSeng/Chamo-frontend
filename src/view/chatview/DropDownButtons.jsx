@@ -1,18 +1,21 @@
 import React, { useContext, useState, useEffect, useRef } from 'react';
 import Report from '../chatview/Report';
-import Reveal from '../chatview/RevealProfileRequest';
 import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { AuthContext } from '../../context/AuthProvider';
 import { HiDotsVertical } from "react-icons/hi";
+import { getUserDetails } from '../../api/api';
+import { blockUser, unblockUser,addFriend, cancelFriendRequest, 
+  rejectFriendRequest, acceptFriendRequest, removeFriend } from '../../api/api';
+import cookies from 'js-cookie'
 
 function DropDownButtons({ getFriendStatusTowardsOtherUser, friendStatus,
   setFriendStatus, chatSessionArray, getUserChatSessions, currentUserAnonUsername, otherUserName,
   currentRoomID, userDetails, sendMsg, getBlockStatusTowardsOtherUser,
   blockStatus, setBlockStatus, icon, otherUID, onClick = () => {}, itemList = [] }) {
-  const { authUser, setAuthUser } = useContext(AuthContext);
+    const [ authUser, setAuthUser ] = useState(cookies.get('user'));
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [onReport, setOnReport] = useState(false);
   const [onReveal, setOnReveal] = useState(false);
@@ -29,7 +32,7 @@ function DropDownButtons({ getFriendStatusTowardsOtherUser, friendStatus,
   useEffect(() => {
     const fetchUserDetails = async () => {
       try {
-        const response = await axios.get(`http://localhost:3001/api/users/${authUser}`);
+        const response = await getUserDetails(authUser);
         //setUserDetails(response.data);
       } catch (error) {
         console.error("Error fetching user details:", error);
@@ -78,8 +81,8 @@ function DropDownButtons({ getFriendStatusTowardsOtherUser, friendStatus,
     const currSessions = chatSessionArray;
     const requestBody = { currentUserID: authUser };
     if (blockOrUnblock === "Block") {
-      const blockSuccess = await axios.post(`http://localhost:3001/api/users/block_user/${otherUID}`, requestBody);
-      console.log("block status is true", blockSuccess.data.success);
+      const blockSuccess = await blockUser(otherUID, requestBody);
+      console.log("block status is true", blockSuccess);
       setBlockStatus(true);
       sendMsg({
         username: userDetails.username,
@@ -90,7 +93,7 @@ function DropDownButtons({ getFriendStatusTowardsOtherUser, friendStatus,
       });
     } else if (blockOrUnblock === "Unblock") {
       try {
-        const unBlockSuccess = await axios.post(`http://localhost:3001/api/users/unblock_user/${otherUID}`, requestBody);
+        const unblockSuccess = await unblockUser(otherUID, requestBody);
       } catch (error) {
         console.log("err", error);
       }
@@ -111,8 +114,7 @@ function DropDownButtons({ getFriendStatusTowardsOtherUser, friendStatus,
     const currSessions = chatSessionArray;
     if (addOrAcceptOrRemove === "Add Friend") {
       try {
-        const requestStatus = await axios.post(`http://localhost:3001/api/reveal/create_frq/${currentRoomID}/${otherUID}`,
-          { currentUserID: authUser });
+        const requestStatus = await addFriend(currentRoomID, otherUID, authUser);
         setFriendStatus("Cancel Friend Request");
         sendMsg({
           username: userDetails.username,
@@ -126,8 +128,7 @@ function DropDownButtons({ getFriendStatusTowardsOtherUser, friendStatus,
     } else if (addOrAcceptOrRemove === "Cancel Friend Request") {
       console.log("cr", currentRoomID, otherUID, authUser);
       try {
-        const requestStatus =
-          await axios.delete(`http://localhost:3001/api/reveal/delete_frq/${currentRoomID}/${otherUID}/${authUser}`);
+        const requestStatus = await cancelFriendRequest(currentRoomID, otherUID, authUser);
         console.log("rqstatus", requestStatus);
         setFriendStatus("Add Friend");
         sendMsg({
@@ -142,8 +143,7 @@ function DropDownButtons({ getFriendStatusTowardsOtherUser, friendStatus,
     } else if (addOrAcceptOrRemove === "Reject Friend Request") {
       console.log("cr", currentRoomID, otherUID, authUser);
       try {
-        const requestStatus =
-          await axios.delete(`http://localhost:3001/api/reveal/reject_frq/${currentRoomID}/${otherUID}/${authUser}`);
+        const requestStatus = await rejectFriendRequest(currentRoomID, otherUID, authUser);
         console.log("rqstatus", requestStatus);
         setFriendStatus("Add Friend");
         sendMsg({
@@ -157,8 +157,7 @@ function DropDownButtons({ getFriendStatusTowardsOtherUser, friendStatus,
       }
     } else if (addOrAcceptOrRemove === "Accept Friend Request") {
       try {
-        const requestStatus =
-          await axios.post(`http://localhost:3001/api/reveal/accept_frq/${currentRoomID}/${otherUID}/${authUser}`);
+        const requestStatus = await acceptFriendRequest(currentRoomID, otherUID, authUser);
         console.log("rqstatus", requestStatus);
         setFriendStatus("Remove Friend");
         sendMsg({
@@ -172,8 +171,7 @@ function DropDownButtons({ getFriendStatusTowardsOtherUser, friendStatus,
       }
     } else if (addOrAcceptOrRemove === "Remove Friend") {
       try {
-        const requestStatus =
-          await axios.delete(`http://localhost:3001/api/reveal/remove_friend/${currentRoomID}/${otherUID}/${authUser}`);
+        const requestStatus = await removeFriend(currentRoomID, otherUID, authUser);
         setFriendStatus("Add Friend");
         sendMsg({
           username: userDetails.username,

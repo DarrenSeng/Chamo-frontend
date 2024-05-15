@@ -10,16 +10,18 @@ import Explore from '../view/Explore';
 import io from "socket.io-client"
 import { AuthContext } from '../context/AuthProvider';
 import axios from "axios";
+import { getUserDetails } from '../api/api';
+import cookies from 'js-cookie'
 
+const api_url = 'https://chamo-app.adaptable.app/' 
+const socket = io.connect(api_url)
 
-const socket = io.connect("http://localhost:3001")
-
-const SideBar = ({activeButton, onClose}) => {
-     const { authUser, setAuthUser } = useContext(AuthContext)
+const SideBar = ({activeButton, onClose}) => {  
+  const [ authUser, setAuthUser ] = useState(cookies.get('user'));
      useEffect(() => {
          const fetchUserDetails = async () => {
              try {
-                 const response = await axios.get(`http://localhost:3001/api/users/${authUser}`);
+                 const response = await getUserDetails(authUser)
                  setAuthUser(response.data._id)
              } catch (error) {
                  console.error("Error fetching user details:", error);
