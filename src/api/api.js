@@ -3,33 +3,33 @@ import axios from 'axios'
 const api_url = 'https://chamo-app.adaptable.app/' 
 
 export const testFunction = async() => {
-    return await axios.get(`${api_url}/api/auth/testroute`)
+    return await axios.get(`${api_url}api/auth/testroute`)
 }
 
 export const loginUser = async (email, password) => {
-    return await axios.post(`${api_url}/api/auth`, { email, password }, { withCredentials: true });
+    return await axios.post(`${api_url}api/auth`, { email, password }, { withCredentials: true });
 };
 
 export const sendPasswordResetLink = async (email) => {
-    return await axios.post(`${api_url}/api/password-reset`, { email });
+    return await axios.post(`${api_url}api/password-reset`, { email });
 };
 
 export const verifyPasswordResetLink = async (userId, token) => {
-    return await axios.get(`${api_url}/api/password-reset/${userId}/${token}`);
+    return await axios.get(`${api_url}api/password-reset/${userId}/${token}`);
 };
 
 export const resetPassword = async (userId, token, password) => {
-    return await axios.post(`${api_url}/api/password-reset/${userId}/${token}`, { password });
+    return await axios.post(`${api_url}api/password-reset/${userId}/${token}`, { password });
 };
 
 export const getUserDetails = async (userId) => {
-    const response = await axios.get(`${api_url}/api/users/${userId}`);
+    const response = await axios.get(`${api_url}api/users/${userId}`);
     //console.log("response",response.data)
     return response
 };
 
 export const updateUserProfile = async (userId, profileData) => {
-    return await axios.put(`${api_url}/api/users/${userId}/profile`, profileData);
+    return await axios.put(`${api_url}api/users/${userId}/profile`, profileData);
 };
   
   export const getCountries = async () => {
@@ -38,7 +38,7 @@ export const updateUserProfile = async (userId, profileData) => {
 
 export const registerUser = async (userData) => {
     try {
-      const response = await axios.post(`${api_url}/api/users`, userData);
+      const response = await axios.post(`${api_url}api/users`, userData);
       return response.data;
     } catch (error) {
       throw new Error(error.response.data.message || 'Registration failed');
@@ -47,7 +47,7 @@ export const registerUser = async (userData) => {
 
 export const authenticateUser = async() => {
     try {
-        return await axios.get(`${api_url}/api/auth`);
+        return await axios.get(`${api_url}api/auth`);
     } catch (error) {
         throw new Error( 'Authentication failed');
     }
@@ -55,7 +55,7 @@ export const authenticateUser = async() => {
 
 export const getChatSession = async (roomID) => {
     try {
-      const response = await axios.get(`${api_url}/api/msg/get-chatsession/${roomID}`);
+      const response = await axios.get(`${api_url}api/msg/get-chatsession/${roomID}`);
       return response.data;
     } catch (error) {
       console.error('Error fetching chat session:', error);
@@ -65,7 +65,7 @@ export const getChatSession = async (roomID) => {
 
   export const getFriendStatus = async (passedOtherID, authUser) => {
     try {
-      const response = await axios.get(`${api_url}/api/reveal/check_frq_status/${passedOtherID}/${authUser}`);
+      const response = await axios.get(`${api_url}api/reveal/check_frq_status/${passedOtherID}/${authUser}`);
       return response; 
     } catch (error) {
       console.error('Error fetching friend status:', error);
@@ -75,7 +75,7 @@ export const getChatSession = async (roomID) => {
 
 export const getBlockStatus = async (otherUserID, authUser) => {
     try {
-        const response = await axios.get(`${api_url}/api/users/check_block_status/${otherUserID}/${authUser}`);
+        const response = await axios.get(`${api_url}api/users/check_block_status/${otherUserID}/${authUser}`);
         return response;
     } catch (error) {
         console.error('Error fetching block status:', error);
@@ -85,7 +85,7 @@ export const getBlockStatus = async (otherUserID, authUser) => {
 
 export const loadingMessages = async (requestData) => {
     try {
-        const response = await axios.post(`${api_url}/api/msg/loading-messages`, requestData);
+        const response = await axios.post(`${api_url}api/msg/loading-messages`, requestData);
         return response.data;
     } catch (error) {
         throw new Error('Error loading messages:', error);
@@ -94,7 +94,7 @@ export const loadingMessages = async (requestData) => {
 
 export const blockUser = async (otherUID, requestBody) => {
     try {
-        const response = await axios.post(`${api_url}/api/users/block_user/${otherUID}`, requestBody);
+        const response = await axios.post(`${api_url}api/users/block_user/${otherUID}`, requestBody);
         return response.data.success;
     } catch (error) {
         throw new Error('Error blocking user:', error);
@@ -103,7 +103,7 @@ export const blockUser = async (otherUID, requestBody) => {
 
 export const unblockUser = async (otherUID, requestBody) => {
     try {
-        const response = await axios.post(`${api_url}/api/users/unblock_user/${otherUID}`, requestBody);
+        const response = await axios.post(`${api_url}api/users/unblock_user/${otherUID}`, requestBody);
         return response.data.success;
     } catch (error) {
         throw new Error('Error unblocking user:', error);
@@ -112,7 +112,7 @@ export const unblockUser = async (otherUID, requestBody) => {
 
 export const addFriend = async (currentRoomID, otherUID, authUser) => {
     try {
-        const response = await axios.post(`${api_url}/api/reveal/create_frq/${currentRoomID}/${otherUID}`, { currentUserID: authUser });
+        const response = await axios.post(`${api_url}api/reveal/create_frq/${currentRoomID}/${otherUID}`, { currentUserID: authUser });
         return response.data;
     } catch (error) {
         throw new Error('Error adding friend:', error);
@@ -121,7 +121,7 @@ export const addFriend = async (currentRoomID, otherUID, authUser) => {
 
 export const cancelFriendRequest = async (currentRoomID, otherUID, authUser) => {
     try {
-        const response = await axios.delete(`${api_url}/api/reveal/delete_frq/${currentRoomID}/${otherUID}/${authUser}`);
+        const response = await axios.delete(`${api_url}api/reveal/delete_frq/${currentRoomID}/${otherUID}/${authUser}`);
         return response.data;
     } catch (error) {
         throw new Error('Error canceling friend request:', error);
@@ -130,7 +130,7 @@ export const cancelFriendRequest = async (currentRoomID, otherUID, authUser) => 
 
 export const rejectFriendRequest = async (currentRoomID, otherUID, authUser) => {
     try {
-        const response = await axios.delete(`${api_url}/api/reveal/reject_frq/${currentRoomID}/${otherUID}/${authUser}`);
+        const response = await axios.delete(`${api_url}api/reveal/reject_frq/${currentRoomID}/${otherUID}/${authUser}`);
         return response.data;
     } catch (error) {
         throw new Error('Error rejecting friend request:', error);
@@ -139,7 +139,7 @@ export const rejectFriendRequest = async (currentRoomID, otherUID, authUser) => 
 
 export const acceptFriendRequest = async (currentRoomID, otherUID, authUser) => {
     try {
-        const response = await axios.post(`${api_url}/api/reveal/accept_frq/${currentRoomID}/${otherUID}/${authUser}`);
+        const response = await axios.post(`${api_url}api/reveal/accept_frq/${currentRoomID}/${otherUID}/${authUser}`);
         return response.data;
     } catch (error) {
         throw new Error('Error accepting friend request:', error);
@@ -148,7 +148,7 @@ export const acceptFriendRequest = async (currentRoomID, otherUID, authUser) => 
 
 export const removeFriend = async (currentRoomID, otherUID, authUser) => {
     try {
-        const response = await axios.delete(`${api_url}/api/reveal/remove_friend/${currentRoomID}/${otherUID}/${authUser}`);
+        const response = await axios.delete(`${api_url}api/reveal/remove_friend/${currentRoomID}/${otherUID}/${authUser}`);
         return response.data;
     } catch (error) {
         throw new Error('Error removing friend:', error);
@@ -157,7 +157,7 @@ export const removeFriend = async (currentRoomID, otherUID, authUser) => {
 
 export const submitReportRequest = async (username, userID, request) => {
     try {
-        const response = await axios.post(`${api_url}/api/help`, {
+        const response = await axios.post(`${api_url}api/help`, {
             username,
             userID,
             request,
@@ -170,7 +170,7 @@ export const submitReportRequest = async (username, userID, request) => {
 
 export const fetchAllTopics = async () => {
     try {
-        const response = await axios.get(`${api_url}/api/topic/render_topics`);
+        const response = await axios.get(`${api_url}api/topic/render_topics`);
         console.log("fetch",response.data)
         return response.data;
     } catch (error) {
@@ -190,7 +190,7 @@ export const createNewTopic = async (authUser, topicTitle, topicDescription, sel
             formData.append('topicImage', selectedImage);
         }
 
-        const response = await axios.post(`${api_url}/api/topic/create_topic`, formData, {
+        const response = await axios.post(`${api_url}api/topic/create_topic`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data'
             }
@@ -204,7 +204,7 @@ export const createNewTopic = async (authUser, topicTitle, topicDescription, sel
 
 export const fetchUserNotifications = async (userID) => {
     try {
-        const response = await axios.post(`${api_url}/api/notifications/get_notifications`, {
+        const response = await axios.post(`${api_url}api/notifications/get_notifications`, {
             userID: userID
         });
         return response.data.requestList;
@@ -215,7 +215,7 @@ export const fetchUserNotifications = async (userID) => {
 
 export const addNewUser = async (otherUserID, currentUserID) => {
     try {
-        await axios.post(`${api_url}/api/users/add_user/${otherUserID}`, {
+        await axios.post(`${api_url}api/users/add_user/${otherUserID}`, {
             currentUserID: currentUserID
         });
     } catch (error) {
@@ -225,7 +225,7 @@ export const addNewUser = async (otherUserID, currentUserID) => {
 
 export const searchForTopicOrUser = async (input) => {
     try {
-        const response = await axios.post(`${api_url}/api/users/results`, {
+        const response = await axios.post(`${api_url}api/users/results`, {
             input: input
         });
 
@@ -241,7 +241,7 @@ export const searchForTopicOrUser = async (input) => {
 
 export const sendRequestToUserPost = async (otherUserID, currentUserID) => {
     try {
-        await axios.post(`${api_url}/api/users/send_req/${otherUserID}`, {
+        await axios.post(`${api_url}api/users/send_req/${otherUserID}`, {
             currentUserID: currentUserID
         });
     } catch (error) {
